@@ -1,7 +1,7 @@
 module.exports = {
   configureWebpack: {
     resolve: {
-      axios: {
+      alias: {
         'assets': '@/assets',
         'common': '@/common',
         'components': '@/components',
