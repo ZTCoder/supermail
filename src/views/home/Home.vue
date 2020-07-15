@@ -1,6 +1,12 @@
 <template>
   <div id="home" class="wrapper">
     <nav-bar class="div-nav-bar"><div slot="center">购物街</div></nav-bar>
+    <tab-control
+      ref="tabcontrol1"
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      class="tab-control" v-show="isTabFixed">
+    </tab-control>
     <scroll
       class="content"
       ref="scroll"
@@ -8,11 +14,11 @@
       @scroll="scrollcontent"
       :pullUpLoad="true"
       @pullingup="loadmore">
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view></feature-view>
       <tab-control
-        class="tab-control"
+        ref="tabcontrol2"
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick">
       </tab-control>
@@ -58,7 +64,10 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0,
+        isTabFixed: false,
+        scrollY: 0
       }
     },
     created() {
@@ -73,6 +82,17 @@
       showGoods() {
         return this.goods[this.currentType].list
       }
+    },
+    destroyed() {
+      console.log('destroyed')
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.scrollY, 0)
+      console.log('activated')
+    },
+    deactivated() {
+      this.scrollY = this.$refs.scroll.getScrollY
+      console.log(this.$refs.scroll.getScrollY)
     },
     methods: {
       /**
@@ -91,17 +111,24 @@
             this.currentType = 'sell';
             break;
         }
+        this.$refs.tabcontrol1.currentIndex = index
+        this.$refs.tabcontrol2.currentIndex = index
       },
       backclick() {
         this.$refs.scroll.scrollTo(0, 0, 500)
       },
       scrollcontent(position) {
-        // console.log(position)
+        // 判断backtop是否需要显示
         this.isShowBackTop = (-position.y) > 1000
+        //判断tabcontrol是否需要吸顶
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       loadmore() {
-        console.log(1111)
+        // console.log(1111)
         this.getGoodsData(this.currentType)
+      },
+      swiperImageLoad() {
+        this.tabOffsetTop = this.$refs.tabcontrol2.$el.offsetTop;
       },
 
       /**
@@ -135,16 +162,10 @@
   .div-nav-bar{
     color: #ffffff;
     background-color: var(--color-tint);
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;
   }
   .tab-control {
-    position: sticky;
-    top: 44px;
-    /*z-index: 9;*/
+    position: relative;
+    z-index: 9;
   }
   .content {
     overflow: hidden;
