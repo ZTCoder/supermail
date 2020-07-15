@@ -70,6 +70,7 @@
         scrollY: 0
       }
     },
+
     created() {
       //请求多个数据
       this.getHomeMultiData()
@@ -77,11 +78,8 @@
       this.getGoodsData('pop')
       this.getGoodsData('new')
       this.getGoodsData('sell')
-    },
-    computed: {
-      showGoods() {
-        return this.goods[this.currentType].list
-      }
+
+      console.log('created')
     },
     destroyed() {
       console.log('destroyed')
@@ -93,6 +91,12 @@
     deactivated() {
       this.scrollY = this.$refs.scroll.getScrollY
       console.log(this.$refs.scroll.getScrollY)
+    },
+
+    computed: {
+      showGoods() {
+        return this.goods[this.currentType].list
+      }
     },
     methods: {
       /**

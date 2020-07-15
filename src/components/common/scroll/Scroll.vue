@@ -13,6 +13,12 @@
     components: {
       BScroll
     },
+    activated() {
+      console.log('-----activated')
+    },
+    deactivated() {
+      console.log('------deactivated')
+    },
     props: {
       probetype: {
         type: Number,
