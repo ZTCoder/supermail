@@ -79,10 +79,10 @@
       this.getGoodsData('new')
       this.getGoodsData('sell')
 
-      console.log('created')
+      //console.log('created')
     },
     destroyed() {
-      console.log('destroyed')
+      //console.log('destroyed')
     },
     activated() {
       this.$refs.scroll.scrollTo(0, this.scrollY, 0)

@@ -30,6 +30,8 @@
   import GoodsList from "components/content/goods/GoodsList";
   import BackTop from "components/content/backtop/BackTop";
 
+  import {mapActions} from 'vuex'
+
   export default {
     name: "Detail",
     components: {
@@ -61,6 +63,9 @@
       }
     },
     methods: {
+      ...mapActions([
+        'realAddToCart'
+      ]),
       imgLoad() {
         this.$refs.detailscroll.finishPullUp
 
@@ -97,8 +102,10 @@
         product.iid = this.iid;
         //加入到购物车
         if(product.iid) {
-          // this.$store.commit('addToCart', product)
-          this.$store.dispatch('realAddToCart', product)
+          this.realAddToCart(product).then(res => {
+            console.log(res)
+            this.$toast.show(res, 2000)
+          })
         }
       }
     },
